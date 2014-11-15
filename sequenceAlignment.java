@@ -1,18 +1,47 @@
-Import.java.Math.Util;
+import java.lang.Math;
+import java.io.*;
+
 
 
 protected int Gap = 0;
 protected int[][] AlignmentMatrix;
+protected int[][] SimilarityMatrix = new int[4][4];
+protected String firstSequenceString;
+protected String secondSequenceString;
 
 
 
-public void readData(){
+public void readData(File file){
 
+	try{
+		BufferedReeader TextFile = new BufferedReader(new FileReader(file));
+		try{
+			String line = null;
+			line = TextFile.readLine();
+			Gap = Integer.parseInt(line);
+			for (int i = 0; i < 4; i++){
+				line = textFile.readLine();
+				createSimilarityMatrix(line, i);
+			}
+		}
+		catch(IOException ex){
+			ex.printStackTrace();
+		}
+	}
+	catch(IOException ex){
+		ex.printStackTrace();
+	}
 };
 
+public void createSimilarityMatrix(String line, int row){
 
+	char[] lineArray = line.toCharArray();
+	int count = 0;
+	for (int i = 0; i < 7; i += 2){
+		SimilarityMatrix[row][count++] = lineArray[i];
+	};
 
-
+}
 
 
 public int cost(char first, char second){
@@ -63,7 +92,8 @@ public void createAlignmentMatrix(String firstSeq, String secondSeq){
 			int left = Gap + AlignmentMatrix[j][i - 1];
 			int diag = cost(firstChar, secondChar) + AlignmentMatrix[j - 1][i - 1];
 
-			int min = min
+			int least = Math.min(top, Math.min(left, diag));
+			AlignmentMatrix[j, i] = least;
 
 		}
 
