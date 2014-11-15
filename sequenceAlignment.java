@@ -1,110 +1,113 @@
 import java.lang.Math;
 import java.io.*;
 
+public class sequenceAlignment{
 
+	static	int Gap = 0;
+	static	int sizeFirst;
+	static	int sizeSecond;
+	static	int[][] AlignmentMatrix;
+	static	int[][] SimilarityMatrix = new int[4][4];
+	static	String firstSequenceString;
+	static	String secondSequenceString;
 
-protected int Gap = 0;
-protected int sizeFirst;
-protected int sizeSecond;
-protected int[][] AlignmentMatrix;
-protected int[][] SimilarityMatrix = new int[4][4];
-protected String firstSequenceString;
-protected String secondSequenceString;
+	static public void readData(File file){
 
-
-
-static public void readData(File file){
-
-	try{
-		BufferedReeader TextFile = new BufferedReader(new FileReader(file));
 		try{
-			String line = null;
-			line = TextFile.readLine();
-			Gap = Integer.parseInt(line);
-			for (int i = 0; i < 4; i++){
+			BufferedReader textFile = new BufferedReader(new FileReader(file));
+			try{
+				String line = null;
 				line = textFile.readLine();
-				createSimilarityMatrix(line, i);
-			}
-			line = textFile.readLine();
-			firstSequenceString = line;
-			sizeFirst = firstSequenceString.length();
-			line = textFile.readLine();
-			secondSequenceString = line;
-			sizeSecond = secondSequenceString.length();
+				Gap = Integer.parseInt(line);
+				for (int i = 0; i < 4; i++){
+					line = textFile.readLine();
+					createSimilarityMatrix(line, i);
+					
+				}
 
-			createAlignmentMatrix(firstSequenceString, secondSequenceString);
-			System.out.println("The least edit cost is: " + AlignmentMatrix[sizeFirst - 1][sizeSecond - 1]);
+				line = textFile.readLine();
+				firstSequenceString = line;
+				sizeFirst = firstSequenceString.length();
+				line = textFile.readLine();
+				secondSequenceString = line;
+				sizeSecond = secondSequenceString.length();
+
+				createAlignmentMatrix(firstSequenceString, secondSequenceString);
+				System.out.println("The least edit cost is: " + AlignmentMatrix[sizeSecond - 1][sizeFirst - 1]);
+			}
+			catch(IOException ex){
+				ex.printStackTrace();
+			}
 		}
 		catch(IOException ex){
 			ex.printStackTrace();
 		}
-	}
-	catch(IOException ex){
-		ex.printStackTrace();
-	}
-};
-
-public void createSimilarityMatrix(String line, int row){
-
-	char[] lineArray = line.toCharArray();
-	int count = 0;
-	for (int i = 0; i < 7; i += 2){
-		SimilarityMatrix[row][count++] = lineArray[i];
 	};
-}
 
+	public static void createSimilarityMatrix(String line, int row){
 
-public int cost(char first, char second){
-
-	int firstBase = convertBase(first);
-	int secondBase = convertBase(second);
-
-	return costMatrix[firstBase][secondBase];
-}
-
-public int convertBase(char letter){
-
-	switch(letter){
-		case 'A': return 0;
-		case 'C': return 1;
-		case 'G': return 2;
-		case 'T': return 3;
+		char[] lineArray = line.toCharArray();
+		int count = 0;
+		for (int i = 0; i < 7;){
+			SimilarityMatrix[row][count] = (int)(lineArray[i] - '0');
+			count++;
+			i = i + 2;
+		};
 	};
-}
 
-public void createAlignmentMatrix(String firstSeq, String secondSeq){
 
-	char[] firstCharArray = firstSeq.toCharArray();
-	char[] secondCharArray = secondSeq.toCharArray();
+	public static int cost(char first, char second){
 
-	AlignmentMatrix = new int [sizeSecond][sizeFirst];
+		int firstBase = convertBase(first);
+		int secondBase = convertBase(second);
 
-	for (int i = 0; i < sizeFirst; i++){
-		AlignmentMatrix[0][i] = i * Gap;
-		//columns
-	}
-	for (int j = 0; j < sizeSecond; j++){
-		AlignmentMatrix[j][0] = j * Gap;
-		//rows
-	}
+		return SimilarityMatrix[firstBase][secondBase];
+	};
 
-	for (i = 1; i < sizeFirst; i++){
-		for (j = 1; j < sizeSecond; j++){
-			char firstChar = firstCharArray[i - 1];
-			char secondChar = secondCharArray[j - 1];
-			
-			int top = Gap + AlignmentMatrix[j - 1][i];
-			int left = Gap + AlignmentMatrix[j][i - 1];
-			int diag = cost(firstChar, secondChar) + AlignmentMatrix[j - 1][i - 1];
+	public static int convertBase(char letter){
 
-			int least = Math.min(top, Math.min(left, diag));
-			AlignmentMatrix[j, i] = least;
+		switch(letter){
+			case 'A': return 0;
+			case 'C': return 1;
+			case 'G': return 2;
+			default: return 3;
 		}
-	}
-}
+	};
 
-public static void main (String... Arguments) throws IOException{
+	public static void createAlignmentMatrix(String firstSeq, String secondSeq){
 
-	File = testing = new File(System.getProperty("user.dir") + "/test");
-	readData(testing);
+		char[] firstCharArray = firstSeq.toCharArray();
+		char[] secondCharArray = secondSeq.toCharArray();
+
+		AlignmentMatrix = new int [sizeSecond][sizeFirst];
+
+		for (int i = 0; i < sizeFirst; i++){
+			AlignmentMatrix[0][i] = i * Gap;
+			//columns
+		}
+		for (int j = 0; j < sizeSecond; j++){
+			AlignmentMatrix[j][0] = j * Gap;
+			//rows
+		}
+
+		for (int i = 1; i < sizeFirst; i++){
+			for (int j = 1; j < sizeSecond; j++){
+				char firstChar = firstCharArray[i - 1];
+				char secondChar = secondCharArray[j - 1];
+				
+				int top = Gap + AlignmentMatrix[j - 1][i];
+				int left = Gap + AlignmentMatrix[j][i - 1];
+				int diag = cost(firstChar, secondChar) + AlignmentMatrix[j - 1][i - 1];
+
+				int least = Math.min(top, Math.min(left, diag));
+				AlignmentMatrix[j][i] = least;
+			}
+		}
+	};
+
+	public static void main (String... Arguments) throws IOException{
+
+		File testing = new File(System.getProperty("user.dir") + "/test");
+		readData(testing);
+	};
 }
