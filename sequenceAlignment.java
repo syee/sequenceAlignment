@@ -37,7 +37,7 @@ public class sequenceAlignment{
 
 
 				createAlignmentMatrix(firstSequenceString, secondSequenceString);
-				//displayBestAlignment();
+				displayBestAlignment();
 				System.out.println("with the minimum edit distance of " + AlignmentMatrix[sizeSecond][sizeFirst] + ".");
 			}
 			catch(IOException ex){
@@ -105,7 +105,7 @@ public class sequenceAlignment{
 
 				AlignmentMatrix[j][i] = least;
 			}
-		}
+		};
 	};
 
 	public static void displayBestAlignment(){
@@ -113,8 +113,8 @@ public class sequenceAlignment{
 		Stack firstFinal = new Stack();
 		Stack secondFinal = new Stack();
 		Stack finalCosts = new Stack();
-		int firstIndex = sizeFirst;
-		int secondIndex = sizeSecond;
+		int firstIndex = sizeFirst - 1;
+		int secondIndex = sizeSecond - 1;
 
 		if (firstIndex == 0){
 			for (int i = 1; i < secondIndex; i++){
@@ -145,6 +145,8 @@ public class sequenceAlignment{
 					}
 					secondIndex = 0;
 				};
+				System.out.println("first index is " + firstIndex);
+				System.out.println("second index is " + secondIndex);
 				int top = AlignmentMatrix[secondIndex - 1][firstIndex];
 				int left = AlignmentMatrix[secondIndex][firstIndex - 1];
 				int diag = AlignmentMatrix[secondIndex-1][firstIndex-1];
