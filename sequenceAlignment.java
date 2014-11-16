@@ -120,7 +120,7 @@ public class sequenceAlignment{
 				int top = Gap + AlignmentMatrix[j - 1][i];
 				int left = Gap + AlignmentMatrix[j][i - 1];
 				int diag = cost(firstChar, secondChar) + AlignmentMatrix[j - 1][i - 1];
-				int least = Math.min(top, Math.min(left, diag));
+				int least = Math.min(top, diag);
 
 				AlignmentMatrix[j][i] = least;
 			}
@@ -189,22 +189,6 @@ public class sequenceAlignment{
 				}
 			}
 		}
-
-		System.out.println("The best alignment is");
-		System.out.println();
-		while(!firstFinal.empty()){
-			System.out.print(firstFinal.pop());
-		}
-		System.out.println();
-		while(!secondFinal.empty()){
-			System.out.print(secondFinal.pop());
-		}
-		System.out.println();
-		while(!finalCosts.empty()){
-			System.out.print(finalCosts.pop());
-		}
-		System.out.println();
-		System.out.println();
 	}
 
 	public static void main (String... Arguments) throws IOException{
