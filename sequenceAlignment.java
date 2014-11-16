@@ -30,20 +30,11 @@ public class sequenceAlignment{
 
 				line = textFile.readLine();
 				firstSequenceString = line;
-				if (line == null){
-					sizeFirst = 0;
-				}
-				else{
-					sizeFirst = firstSequenceString.length();
-				}
+				sizeFirst = firstSequenceString.length();
 				line = textFile.readLine();
 				secondSequenceString = line;
-				if (line == null){
-					sizeSecond = 0;
-				}
-				else{
-					sizeSecond = secondSequenceString.length();
-				}
+				sizeSecond = secondSequenceString.length();
+
 
 				createAlignmentMatrix(firstSequenceString, secondSequenceString);
 				displayBestAlignment();
@@ -63,7 +54,7 @@ public class sequenceAlignment{
 		char[] lineArray = line.toCharArray();
 		int count = 0;
 		for (int i = 0; i < 4; i++){
-			SimilarityMatrix[row][count] = (int)(lineArray[i] - '0');
+			SimilarityMatrix[row][count] = (int)(lineArray[i]);
 			count++;
 		};
 	};
