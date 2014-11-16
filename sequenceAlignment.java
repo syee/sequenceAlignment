@@ -26,15 +26,24 @@ public class sequenceAlignment{
 				for (int i = 0; i < 4; i++){
 					line = textFile.readLine();
 					createSimilarityMatrix(line, i);
-					
 				}
 
 				line = textFile.readLine();
 				firstSequenceString = line;
-				sizeFirst = firstSequenceString.length();
+				if (line == null){
+					sizeFirst = 0;
+				}
+				else{
+					sizeFirst = firstSequenceString.length();
+				}
 				line = textFile.readLine();
 				secondSequenceString = line;
-				sizeSecond = secondSequenceString.length();
+				if (line == null){
+					sizeSecond = 0;
+				}
+				else{
+					sizeSecond = secondSequenceString.length();
+				}
 
 				createAlignmentMatrix(firstSequenceString, secondSequenceString);
 				displayBestAlignment();
@@ -81,18 +90,26 @@ public class sequenceAlignment{
 
 	public static void createAlignmentMatrix(String firstSeq, String secondSeq){
 
-		firstCharArray = firstSeq.toCharArray();
-		secondCharArray = secondSeq.toCharArray();
+		if (firstSeq == null){
+			firstCharArray = null;
+		}
+		else{
+			firstCharArray = firstSeq.toCharArray();
+		}
+		if (secondSeq == null){
+			secondCharArray = null;
+		}
+		else{
+			secondCharArray = secondSeq.toCharArray();
+		}
 
 		AlignmentMatrix = new int [sizeSecond + 1][sizeFirst + 1];
 
 		for (int i = 0; i <= sizeFirst; i++){
 			AlignmentMatrix[0][i] = i * Gap;
-			//columns
 		}
 		for (int j = 0; j <= sizeSecond; j++){
 			AlignmentMatrix[j][0] = j * Gap;
-			//rows
 		}
 
 		for (int i = 1; i <= sizeFirst; i++){
@@ -103,8 +120,8 @@ public class sequenceAlignment{
 				int top = Gap + AlignmentMatrix[j - 1][i];
 				int left = Gap + AlignmentMatrix[j][i - 1];
 				int diag = cost(firstChar, secondChar) + AlignmentMatrix[j - 1][i - 1];
-
 				int least = Math.min(top, Math.min(left, diag));
+
 				AlignmentMatrix[j][i] = least;
 			}
 		}
@@ -115,59 +132,50 @@ public class sequenceAlignment{
 		Stack firstFinal = new Stack();
 		Stack secondFinal = new Stack();
 		Stack finalCosts = new Stack();
-
 		int firstIndex = sizeFirst;
 		int secondIndex = sizeSecond;
 
-				int topCount = 0;
-				int leftCount = 0;
-				int diagCount = 0;
+		if (firstIndex == 0){
+			for (int i = 1; i < secondIndex; i++){
+				secondFinal.push(secondCharArray[secondIndex - i]);
+			};
+		}
+
+		if (secondIndex == 0){
+			for (int i = 1; i < firstIndex; i++){
+				firstFinal.push(firstCharArray[firstIndex - i]);
+			};
+		}
 
 		while (firstIndex > 0){
-
 			if (secondIndex == 0){
-					for (int i = 1; i <= firstIndex; i++){
+					for (int i = 1; i < firstIndex; i++){
 						firstFinal.push(firstCharArray[firstIndex - i]);
-						secondFinal.push('-');
-						finalCosts.push(Gap);
 					}
 					firstIndex = 0;
 			};
-
 			while (secondIndex > 0){
 
 				if (firstIndex == 0){
-					for (int i = 1; i <= secondIndex; i++){
+					for (int i = 1; i < secondIndex; i++){
 						secondFinal.push(secondCharArray[secondIndex - i]);
 						firstFinal.push('-');
 						finalCosts.push(Gap);
 					}
 					secondIndex = 0;
 				};
-
 				int top = AlignmentMatrix[secondIndex - 1][firstIndex];
-				// System.out.println("the top is " + top);
 				int left = AlignmentMatrix[secondIndex][firstIndex - 1];
-				// System.out.println("the left is " + left);
-				int diag = AlignmentMatrix[secondIndex][firstIndex];
-				// System.out.println("the diag is " + diag);
-
-
+				int diag = AlignmentMatrix[secondIndex-1][firstIndex-1];
 				int least = Math.min(top, Math.min(left, diag));
-
-				if (least == diag){
+				if (top == diag){
 					firstFinal.push(firstCharArray[firstIndex - 1]);
 					secondFinal.push(secondCharArray[secondIndex - 1]);
 					finalCosts.push(cost(firstCharArray[firstIndex - 1], secondCharArray[secondIndex - 1]));
 					firstIndex--;
 					secondIndex--;
-					diagCount++;
-					// System.out.println("diag " + diagCount);
-					// System.out.println("first index " + firstIndex);
-					// System.out.println("second index " + secondIndex);
-										
 				}
-				else if(least == top){
+				else if(least == left){
 					firstFinal.push("-");
 					secondFinal.push(secondCharArray[secondIndex - 1]);
 					finalCosts.push(Gap);
@@ -179,26 +187,6 @@ public class sequenceAlignment{
 					finalCosts.push(Gap);
 					firstIndex--;
 				}
-
-
-
-				// else if (least == left){
-				// 	firstFinal.push(firstCharArray[firstIndex - 1]);
-				// 	secondFinal.push("-");
-				// 	finalCosts.push(Gap);
-				// 	firstIndex--;
-				// 	// leftCount++;
-				// 	// System.out.println("left " + leftCount);
-				// }
-				// else{
-				// 	firstFinal.push("-");
-				// 	secondFinal.push(secondCharArray[secondIndex - 1]);
-				// 	finalCosts.push(Gap);
-				// 	secondIndex--;
-				// 	// topCount++;
-				// 	// System.out.println("top " + topCount);
-					
-				// }
 			}
 		}
 
@@ -216,7 +204,7 @@ public class sequenceAlignment{
 			System.out.print(finalCosts.pop());
 		}
 		System.out.println();
-
+		System.out.println();
 	}
 
 	public static void main (String... Arguments) throws IOException{
