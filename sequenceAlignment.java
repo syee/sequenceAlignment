@@ -37,7 +37,7 @@ public class sequenceAlignment{
 
 
 				createAlignmentMatrix(firstSequenceString, secondSequenceString);
-				displayBestAlignment();
+				//displayBestAlignment();
 				System.out.println("with the minimum edit distance of " + AlignmentMatrix[sizeSecond][sizeFirst] + ".");
 			}
 			catch(IOException ex){
@@ -54,7 +54,7 @@ public class sequenceAlignment{
 		char[] lineArray = line.toCharArray();
 		int count = 0;
 		for (int i = 0; i < 4; i++){
-			SimilarityMatrix[row][count] = (int)(lineArray[i]);
+			SimilarityMatrix[row][count] = (int)(lineArray[i] - '0');
 			count++;
 		};
 	};
@@ -80,18 +80,9 @@ public class sequenceAlignment{
 
 	public static void createAlignmentMatrix(String firstSeq, String secondSeq){
 
-		if (firstSeq == null){
-			firstCharArray = null;
-		}
-		else{
-			firstCharArray = firstSeq.toCharArray();
-		}
-		if (secondSeq == null){
-			secondCharArray = null;
-		}
-		else{
-			secondCharArray = secondSeq.toCharArray();
-		}
+		firstCharArray = firstSeq.toCharArray();
+		secondCharArray = secondSeq.toCharArray();
+
 
 		AlignmentMatrix = new int [sizeSecond + 1][sizeFirst + 1];
 
@@ -110,7 +101,7 @@ public class sequenceAlignment{
 				int top = Gap + AlignmentMatrix[j - 1][i];
 				int left = Gap + AlignmentMatrix[j][i - 1];
 				int diag = cost(firstChar, secondChar) + AlignmentMatrix[j - 1][i - 1];
-				int least = Math.min(top, diag);
+				int least = Math.min(top, Math.min(left, diag));
 
 				AlignmentMatrix[j][i] = least;
 			}
