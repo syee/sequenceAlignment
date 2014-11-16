@@ -62,10 +62,9 @@ public class sequenceAlignment{
 
 		char[] lineArray = line.toCharArray();
 		int count = 0;
-		for (int i = 0; i < 7;){
+		for (int i = 0; i < 4; i++){
 			SimilarityMatrix[row][count] = (int)(lineArray[i] - '0');
 			count++;
-			i = i + 2;
 		};
 	};
 
